@@ -30,6 +30,13 @@ app.get('/', (req, res) => {
     res.json({"message": "Backend Api for Gw cleaners"});
 });
 
+require('./app/routes/Cards.js')(app);
+require('./app/routes/Dropboxes.js')(app);
+require('./app/routes/Notifications.js')(app);
+require('./app/routes/Orders.js')(app);
+require('./app/routes/Transactions.js')(app);
+require('./app/routes/Users.js')(app);
+
 // listen for requests
 app.listen(3000, () => {
     console.log("Server is listening on port 3000");

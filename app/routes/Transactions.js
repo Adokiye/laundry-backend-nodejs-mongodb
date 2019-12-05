@@ -1,18 +1,15 @@
 module.exports = (app) => {
     const transaction = require('../controllers/Transactions.js');
     let middleware = require('../middleware.js')
-    // Create a new Note
+    // Create a new Transaction
     app.post('/transactions', middleware.checkToken, transaction.create);
 
-    // Retrieve all Notes
+    // Retrieve all Transactions
     app.get('/transactions/:userId', middleware.checkToken, transaction.findAll);
 
-    // Retrieve a single Note with noteId
+    // Retrieve a single Transaction with transactionId
     app.get('/transactions/:transactionId', middleware.checkToken, transaction.findOne);
 
-    // Update a Note with noteId
-    app.put('/transactions/:transactionId', middleware.checkToken, transaction.update);
-
-    // Delete a Note with noteId
+    // Delete a Transaction with transactionId
     app.delete('/transactions/:transactionId', middleware.checkToken, transaction.delete);
 }

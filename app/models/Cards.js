@@ -9,5 +9,4 @@ const CardsSchema = mongoose.Schema({
 }, {
     timestamps: true
 });
-
 module.exports = mongoose.model('Cards', CardsSchema);

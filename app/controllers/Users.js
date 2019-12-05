@@ -6,6 +6,7 @@ let middleware = require('../middleware');
 // Create and Save a new user
 exports.create = (req, res) => {
     let regg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    console.log(req)
     if(!req.body.first_name) {
         return res.status(400).send({
             message: "First Name field can not be empty"
@@ -18,15 +19,19 @@ exports.create = (req, res) => {
         return res.status(400).send({
             message: "Address field can not be empty"
         });
-    }else if(!req.body.zipcode || !Number.isInteger(req.body.zipcode)){
+    }else if(!req.body.zipcode 
+ //       || !Number.isInteger(req.body.zipcode)
+        ){
         return res.status(400).send({
             message: "Zipcode field can not be empty and must be a number"
         });
-    }else if(!req.body.mobile_number || !Number.isInteger(req.body.mobile_number)){
+    }else if(!req.body.mobile_number
+   //      || !Number.isInteger(req.body.mobile_number)
+         ){
         return res.status(400).send({
             message: "Mobile Number field can not be empty and must be a number"
         });
-    }else if(!req.body.password || req.body.password < 8){
+    }else if(!req.body.password || req.body.password.length < 8){
         return res.status(400).send({
             message: "Password field can not be empty and must be equal to or greater than 8 characters"
         });
@@ -43,13 +48,13 @@ exports.create = (req, res) => {
         }else{
             // Create a user
             const user = new User({
-            dropbox_id: req.body.dropbox_id, 
-            user_id: req.body.user_id,
-            order_id: req.body.order_id,
-            dropbox_address: req.body.dropbox_address,
-            price: req.body.price,
-            stage: 'In Process',
-            preferences: req.body.preferences || null
+            email: req.body.email, 
+            password: req.body.password,
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            address: req.body.address,
+            mobile_number: req.body.mobile_number,
+            zipcode: req.body.zipcode
             });
             // Save user in the database
             user.save()
@@ -78,9 +83,14 @@ if(!req.body.password || req.body.password < 8 || !req.body.email || (regg.test(
             message: "Invalid Credentials"
         });
 }
-User.find({email : req.body.email, password: req.body.password}, function (err, docs) {
-    if (docs.length){
-        let token = jwt.sign({email: req.body.email},
+console.log(req.body)
+User.findOne({email : req.body.email}, function (err, docs) {
+ //    console.log(docs)
+    if (docs){  
+        docs.comparePassword(req.body.password, function(err, isMatch) {
+            if (err) throw err;
+            if(isMatch){
+                      let token = jwt.sign({email: req.body.email},
             config.secret,
             { expiresIn: '24h' // expires in 24 hours
             }
@@ -91,7 +101,13 @@ User.find({email : req.body.email, password: req.body.password}, function (err, 
             message: 'Authentication successful!',
             token: token,
             data: docs
-          });
+          });  
+            }else{
+                return res.status(400).send({
+                    message: "Invalid Credentials"
+                });
+            }
+        });
     }else{
         return res.status(400).send({
             message: "Invalid Credentials"
@@ -154,37 +170,6 @@ exports.delete = (req, res) => {
         }
         return res.status(500).send({
             message: "Could not delete User with id " + req.params.userId
-        });
-    });
-};
-exports.updateStage = (req, res) => {
-    if(!req.body.stage) {
-        return res.status(400).send({
-            message: "Stage field can not be empty"
-        });
-    }else if(!req.body.userId){
-        return res.status(400).send({
-            message: "OrderId field can not be empty"
-        });
-    }
-    User.findByIdAndUpdate(req.params.userId, {
-        stage: req.body.stage,
-    }, {new: true})
-    .then(user => {
-        if(!user) {
-            return res.status(404).send({
-                message: "User not found with id " + req.params.userId
-            });
-        }
-        res.send(user);
-    }).catch(err => {
-        if(err.kind === 'ObjectId') {
-            return res.status(404).send({
-                message: "User not found with id " + req.params.userId
-            });                
-        }
-        return res.status(500).send({
-            message: "Error updating user with id " + req.params.userId
         });
     });
 };

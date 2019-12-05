@@ -7,5 +7,4 @@ const TransactionsSchema = mongoose.Schema({
 }, {
     timestamps: true
 });
-
-module.exports = mongoose.model('Orders', TransactionsSchema);
+module.exports = mongoose.model('Transactions', TransactionsSchema);

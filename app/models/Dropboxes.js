@@ -8,5 +8,4 @@ const DropboxesSchema = mongoose.Schema({
 }, {
     timestamps: true
 });
-
 module.exports = mongoose.model('Dropboxes', DropboxesSchema);

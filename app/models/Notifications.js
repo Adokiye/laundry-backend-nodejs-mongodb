@@ -8,5 +8,4 @@ const NotificationsSchema = mongoose.Schema({
 }, {
     timestamps: true
 });
-
-module.exports = mongoose.model('Orders', NotificationsSchema);
+module.exports = mongoose.model('Notifications', NotificationsSchema);
