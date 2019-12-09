@@ -4,6 +4,15 @@ const bodyParser = require('body-parser');
 // create express app
 const app = express();
 
+// app.use(function(req, res, next) {
+//     res.header('Access-Control-Allow-Origin', 'http://10.0.2.2:3001');
+//     res.header(
+//       'Access-Control-Allow-Headers',
+//       'Origin, X-Requested-With, Content-Type, Accept'
+//     );
+//     next();
+//   });
+
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -38,6 +47,6 @@ require('./app/routes/Transactions.js')(app);
 require('./app/routes/Users.js')(app);
 
 // listen for requests
-app.listen(3000, () => {
+app.listen(3001, () => {
     console.log("Server is listening on port 3000");
 });

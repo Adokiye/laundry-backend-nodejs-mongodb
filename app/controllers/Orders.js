@@ -29,15 +29,21 @@ exports.create = (req, res) => {
   User.findOne({_id: req.body.user_id }, function(err, docs) {
     //    console.log(docs)
     if (docs) {
+      function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
       // Create a order
       const order = new Order({
-        dropbox_id: req.body.dropbox_id,
+        dropbox_id: req.body.dropbox_id||null,
         user_id: req.body.user_id,
-        order_id: req.body.order_id,
-        dropbox_address: req.body.dropbox_address,
-        price: req.body.price,
+        order_id: req.body.order_id||getRandomInt(1000,10000),
+        dropbox_address: req.body.dropbox_address||null,
+        price: req.body.price||null,
         stage: "In Process",
-        preferences: req.body.preferences || null
+        preferences: req.body.preferences || null,
+        square_up_id: req.body.card_id
       });
 
       // Save order in the database
@@ -49,7 +55,7 @@ exports.create = (req, res) => {
         .catch(err => {
           res.status(500).send({
             message:
-              err.message || "Some error occurred while saving the Order."
+              err.message || "Some error occurred while creating the Order."
           });
         });
     } else {
@@ -68,8 +74,7 @@ exports.findAll = (req, res) => {
     })
     .catch(err => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving the orders."
+        message: err.message || "Some error occurred while retrieving the orders."
       });
     });
 };

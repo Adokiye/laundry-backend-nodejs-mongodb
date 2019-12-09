@@ -1,46 +1,93 @@
 const Card = require('../models/Cards.js');
-
+const User = require("../models/Users.js");
+const Order = require("../models/Orders")
+let config = require('../../config/database.js');
+var SquareConnect = require('square-connect');
+var defaultClient = SquareConnect.ApiClient.instance;
+// Configure OAuth2 access token for authorization: oauth2
+var oauth2 = defaultClient.authentications['oauth2'];
+oauth2.accessToken = config.square_up_access_token;
 // Create and Save a new card
 exports.create = (req, res) => {
-    if(!req.body.no || !Number.isInteger(req.body.no)) {
+    if(!req.body.nonce) {
         return res.status(400).send({
-            message: "Card Number can not be empty and must be a number"
+            message: "Nonce is required"
         });
-    }else if(!req.body.month || !Number.isInteger(req.body.month)){
+    }else if(!req.body.user_id ){
         return res.status(400).send({
-            message: "Month field can not be empty and must be a number"
-        });
-    }else if(!req.body.year || !Number.isInteger(req.body.year)){
-        return res.status(400).send({
-            message: "Year field can not be empty and must be a number"
-        });
-    }else if(!req.body.cvv || !Number.isInteger(req.body.cvv)){
-        return res.status(400).send({
-            message: "Cvv field can not be empty and must be a number"
-        });
-    }else if(!req.body.user_id){
-        return res.status(400).send({
-            message: "User id field can not be empty"
+            message: "User Id field can not be empty"
         });
     }
+    User.findOne({_id: req.body.user_id }, function(err, docs) {
+        //    console.log(docs)
+        if (docs) {
+            var apiInstance = new SquareConnect.CustomersApi();
+            const body = {
+                card_nonce: req.body.nonce,
+            }
+            apiInstance.createCustomerCard(docs.square_up_id, body).then(function(data) {
+                const card = new Card({
+                    no: data.card.last_4, 
+                    month: data.card.exp_month,
+                    year: data.card.exp_year,
+                    user_id: req.body.user_id,
+                    square_up_id: data.card.id,
+                    name: data.card.card_brand
+                });
+                // Save card in the database
+                card.save()
+                .then(data => {
+                    function getRandomInt(min, max) {
+                        min = Math.ceil(min);
+                        max = Math.floor(max);
+                        return Math.floor(Math.random() * (max - min + 1)) + min;
+                    }
+                    const order = new Order({
+              //          dropbox_id: req.body.dropbox_id,
+                        user_id: req.body.user_id,
+                        order_id: "OR"+getRandomInt(1000, 10000),
+                //        dropbox_address: req.body.dropbox_address,
+                        price: req.body.price||null,
+                        stage: "In Process",
+                        preferences: req.body.preferences || null,
+                        square_up_id: data.square_up_id
+                      });
+                
+                      // Save order in the database
+                      order
+                        .save()
+                        .then(data => {
+                          res.send(data);
+                        })
+                        .catch(err => {
+                          res.status(500).send({
+                            message:
+                              err.message || "Some error occurred while saving the Order."
+                          });
+                        });
+                    res.send(data);
+                }).catch(err => {
+                    res.status(500).send({
+                        message: err.message || "Some error occurred while saving the Card."
+                    });
+                });
+                console.log('API called successfully. Returned data: ' + data);
+              }, function(error) {   
+                    console.error(error.response.error);
+                for(let i=0;i<JSON.parse(error.response.error.text).errors.length;i++){
+                    res.status(500).send({
+                        message: JSON.parse(error.response.error.text).errors[i].detail || "Some error occurred while saving the Card."
+                    });
+                }
+           
+              });
+        } else {
+          return res.status(400).send({
+            message: "Unauthorized"
+          });
+        }
     // Create a card
-    const card = new Card({
-        no: req.body.no, 
-        month: req.body.month,
-        year: req.body.year,
-        cvv: req.body.cvv,
-        user_id: req.body.user_id
-    });
-
-    // Save card in the database
-    card.save()
-    .then(data => {
-        res.send(data);
-    }).catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occurred while saving the Card."
-        });
-    });
+    })
 };
 
 // Retrieve and return all cards from the database.

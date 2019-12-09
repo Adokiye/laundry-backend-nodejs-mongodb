@@ -9,9 +9,11 @@ const UsersSchema = mongoose.Schema({
     mobile_number: {type: Number, required: true},
     email: {type: String, required: true, index: { unique: true }, lowercase: true},
      password: {type: String, required: true},
-     img_url: String
+     img_url: String,
+     square_up_id: {type: String, required: true}
 }, {
-    timestamps: true
+    timestamps: true,
+    strict: false
 });
 UsersSchema.pre('save', function(next) {
     var user = this;

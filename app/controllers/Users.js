@@ -3,10 +3,17 @@ const bodyParser = require('body-parser');
 let jwt = require('jsonwebtoken');
 let config = require('../../config/database.js');
 let middleware = require('../middleware');
+var SquareConnect = require('square-connect');
+var defaultClient = SquareConnect.ApiClient.instance;
+// Configure OAuth2 access token for authorization: oauth2
+var oauth2 = defaultClient.authentications['oauth2'];
+
+oauth2.accessToken = config.square_up_access_token;
+
 // Create and Save a new user
 exports.create = (req, res) => {
     let regg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    console.log(req)
+    //console.log(req)
     if(!req.body.first_name) {
         return res.status(400).send({
             message: "First Name field can not be empty"
@@ -46,31 +53,68 @@ exports.create = (req, res) => {
                 message: "Email exists already"
             });
         }else{
-            // Create a user
+            let square_up_data = ''
+            var apiInstance = new SquareConnect.CustomersApi();
+        //    var body = new SquareConnect.CreateCustomerRequest({
+        //         given_name: req.body.first_name,
+        //         family_name: req.body.last_name,
+        //         email_address: req.body.email,
+        //         phone_number: req.body.mobile_number,
+        //     }); // CreateCustomerRequest | An object containing the fields to POST for the request.  See the corresponding object definition for field details.
+             
+            const body = {
+                given_name: req.body.first_name,
+                family_name: req.body.last_name,
+                email_address: req.body.email,
+          //      phone_number: req.body.mobile_number,
+            }
+            console.log(body)
+            apiInstance.createCustomer(body).then(function(data) {
+                console.log('API called successfully. Returned data: ' + data);
+                square_up_data = data;
+                            // Create a user
             const user = new User({
-            email: req.body.email, 
-            password: req.body.password,
-            first_name: req.body.first_name,
-            last_name: req.body.last_name,
-            address: req.body.address,
-            mobile_number: req.body.mobile_number,
-            zipcode: req.body.zipcode
-            });
-            // Save user in the database
-            user.save()
-            .then(data => {
-            let token = jwt.sign({email: req.body.email},
-                    config.secret,
-            );
-            res.send({
-                data: data,
-                token: token
-              });
-            }).catch(err => {
-            res.status(500).send({
-            message: err.message || "Some error occurred while saving the User."
-            });
-            });
+                email: req.body.email, 
+                password: req.body.password,
+                first_name: req.body.first_name,
+                last_name: req.body.last_name,
+                address: req.body.address,
+                mobile_number: req.body.mobile_number,
+                zipcode: req.body.zipcode,
+                square_up_id: square_up_data.customer.id
+                });
+                // Save user in the database
+                user.save()
+                .then(data => {
+                let token = jwt.sign({email: req.body.email},
+                        config.secret,
+                );
+                res.send({
+                    data: data,
+                    token: token
+                  });
+                }).catch(err => {
+                res.status(500).send({
+                message: err.message || "Some error occurred while saving the User."
+                });
+                });
+              }, function(error) {
+                console.error(error);
+              }); 
+//                 try {
+//     const respone = await payments_api.createPayment(request_body);
+//     const json = JSON.stringify(respone);
+//     res.render('process-payment', {
+//       'title': 'Payment Successful',
+//       'result': json
+//     });
+//   } catch (error) {
+//     res.render('process-payment', {
+//       'title': 'Payment Failure',
+//       'result': error.response.text
+//     });
+//   }
+
         }
     });
 };
