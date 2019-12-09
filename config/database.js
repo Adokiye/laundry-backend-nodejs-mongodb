@@ -1,5 +1,5 @@
 module.exports = {
-    url: 'mongodb+srv://Adokiye:adk20100@cluster0-mrw0d.mongodb.net/test?retryWrites=true&w=majority',
+    url: 'mongodb://Adokiye:adk20100@ds253368.mlab.com:53368/heroku_9gf28k70',
     secret: 'gw_cleaners',
     square_up_access_token: 'EAAAEPUY37iB4hrXIDgwr8T3cO0rPP_x3hMA9eDGkSvzWmfhNOj39KnklohOtEhJ'
 }
