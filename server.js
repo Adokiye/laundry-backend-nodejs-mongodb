@@ -47,6 +47,6 @@ require('./app/routes/Transactions.js')(app);
 require('./app/routes/Users.js')(app);
 
 // listen for requests
-app.listen(3001, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log("Server is listening on port 3000");
 });
