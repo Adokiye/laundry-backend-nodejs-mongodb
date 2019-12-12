@@ -50,7 +50,9 @@ exports.create = (req, res) => {
                         price: req.body.price||null,
                         stage: "In Process",
                         preferences: req.body.preferences || null,
-                        square_up_id: data.square_up_id
+                        square_up_id: data.square_up_id,
+                        dropoff_date: req.body.dropoff_date,
+                        pickup_date: req.body.pickup_date,
                       });
                 
                       // Save order in the database

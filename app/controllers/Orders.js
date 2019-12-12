@@ -14,6 +14,14 @@ exports.create = (req, res) => {
     return res.status(400).send({
       message: "Dropbox Address field can not be empty"
     });
+  }else if (!req.body.dropoff_date) {
+    return res.status(400).send({
+      message: "Dropoff Date field can not be empty"
+    });
+  }else if (!req.body.pickup_date) {
+    return res.status(400).send({
+      message: "Pickup Date field can not be empty"
+    });
   } else if (
     !req.body.price
     //  || !Number.isInteger(req.body.price)
@@ -40,6 +48,8 @@ exports.create = (req, res) => {
         user_id: req.body.user_id,
         order_id: req.body.order_id||getRandomInt(1000,10000),
         dropbox_address: req.body.dropbox_address||null,
+        dropoff_date: req.body.dropoff_date,
+        pickup_date: req.body.pickup_date,
         price: req.body.price||null,
         stage: "In Process",
         preferences: req.body.preferences || null,
