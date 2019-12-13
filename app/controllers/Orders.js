@@ -2,19 +2,19 @@ const Order = require("../models/Orders.js");
 const User = require("../models/Users.js");
 // Create and Save a new order
 exports.create = (req, res) => {
-  if (!req.body.order_id) {
-    return res.status(400).send({
-      message: "OrderId field can not be empty"
-    });
-  } else if (!req.body.dropbox_id) {
-    return res.status(400).send({
-      message: "DropboxId field can not be empty"
-    });
-  } else if (!req.body.dropbox_address) {
-    return res.status(400).send({
-      message: "Dropbox Address field can not be empty"
-    });
-  }else if (!req.body.dropoff_date) {
+  // if (!req.body.order_id) {
+  //   return res.status(400).send({
+  //     message: "OrderId field can not be empty"
+  //   });
+  // } else if (!req.body.dropbox_id) {
+  //   return res.status(400).send({
+  //     message: "DropboxId field can not be empty"
+  //   });
+  // } else if (!req.body.dropbox_address) {
+  //   return res.status(400).send({
+  //     message: "Dropbox Address field can not be empty"
+  //   });
+  if (!req.body.dropoff_date) {
     return res.status(400).send({
       message: "Dropoff Date field can not be empty"
     });
@@ -22,14 +22,15 @@ exports.create = (req, res) => {
     return res.status(400).send({
       message: "Pickup Date field can not be empty"
     });
-  } else if (
-    !req.body.price
-    //  || !Number.isInteger(req.body.price)
-  ) {
-    return res.status(400).send({
-      message: "Price field can not be empty and must be a number"
-    });
-  } else if (!req.body.user_id) {
+  // } else if (
+  //   !req.body.price
+  //   //  || !Number.isInteger(req.body.price)
+  // ) {
+  //   return res.status(400).send({
+  //     message: "Price field can not be empty and must be a number"
+  //   });
+  // } 
+  }else if (!req.body.user_id) {
     return res.status(400).send({
       message: "UserId field can not be empty"
     });
@@ -46,7 +47,7 @@ exports.create = (req, res) => {
       const order = new Order({
         dropbox_id: req.body.dropbox_id||null,
         user_id: req.body.user_id,
-        order_id: req.body.order_id||getRandomInt(1000,10000),
+        order_id: req.body.order_id||"ORN/A"+getRandomInt(1000,10000),
         dropbox_address: req.body.dropbox_address||null,
         dropoff_date: req.body.dropoff_date,
         pickup_date: req.body.pickup_date,

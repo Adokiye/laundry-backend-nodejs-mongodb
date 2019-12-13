@@ -54,17 +54,16 @@ exports.create = (req, res) => {
                         dropoff_date: req.body.dropoff_date,
                         pickup_date: req.body.pickup_date,
                       });
-                
+                     
                       // Save order in the database
                       order
                         .save()
-                        .then(data => {
-                          res.send(data);
+                        .then(dataOrder => {
+                          res.send(dataOrder);
                         })
                         .catch(err => {
                           res.status(500).send({
-                            message:
-                              err.message || "Some error occurred while saving the Order."
+                            message:err.message || "Some error occurred while saving the Order."
                           });
                         });
                     res.send(data);
