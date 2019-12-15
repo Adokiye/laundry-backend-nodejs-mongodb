@@ -5,10 +5,12 @@ const OrdersSchema = mongoose.Schema({
     dropbox_id: {type: String,}, 
     stage: String,
     dropbox_address: {type: String,},
-    price: {type: Number, required: true},
+    price: {type: Number, },
     user_id: {type: String, required: true},
     dropoff_date: {type: Date, required: true},
     pickup_date: {type: Date, required: true},
+    pickup_time: {type: String, required: true},
+    dropoff_time: {type: String, required: true},
     preferences: String,
     square_up_id: {type: String, required: true}
 //    current_process: String

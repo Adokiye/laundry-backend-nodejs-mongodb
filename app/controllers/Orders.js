@@ -2,6 +2,7 @@ const Order = require("../models/Orders.js");
 const User = require("../models/Users.js");
 // Create and Save a new order
 exports.create = (req, res) => {
+  console.log(req.body)
   // if (!req.body.order_id) {
   //   return res.status(400).send({
   //     message: "OrderId field can not be empty"
@@ -21,15 +22,15 @@ exports.create = (req, res) => {
   }else if (!req.body.pickup_date) {
     return res.status(400).send({
       message: "Pickup Date field can not be empty"
+    }); 
+  }else  if (!req.body.dropoff_time) {
+    return res.status(400).send({
+      message: "Dropoff Time field can not be empty"
     });
-  // } else if (
-  //   !req.body.price
-  //   //  || !Number.isInteger(req.body.price)
-  // ) {
-  //   return res.status(400).send({
-  //     message: "Price field can not be empty and must be a number"
-  //   });
-  // } 
+  }else if (!req.body.pickup_time) {
+    return res.status(400).send({
+      message: "Pickup Time field can not be empty"
+    }); 
   }else if (!req.body.user_id) {
     return res.status(400).send({
       message: "UserId field can not be empty"
@@ -53,21 +54,24 @@ exports.create = (req, res) => {
         pickup_date: req.body.pickup_date,
         price: req.body.price||null,
         stage: "In Process",
-        preferences: req.body.preferences || null,
-        square_up_id: req.body.card_id
+        preferences: req.body.preference || null,
+        square_up_id: req.body.card_id,
+        dropoff_time: req.body.dropoff_time,
+        pickup_time: req.body.pickup_time
       });
-
+console.log(order)
       // Save order in the database
       order
         .save()
         .then(data => {
+          console.log(data+"success")
           res.send(data);
         })
         .catch(err => {
+          console.log(err)
           res.status(500).send({
-            message:
-              err.message || "Some error occurred while creating the Order."
-          });
+            message: "Some error occurred while creating the Order."
+          , data: err});
         });
     } else {
       return res.status(400).send({
