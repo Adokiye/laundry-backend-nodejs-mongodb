@@ -48,6 +48,8 @@ exports.create = (req, res) => {
       const order = new Order({
         dropbox_id: req.body.dropbox_id||null,
         user_id: req.body.user_id,
+        user_name: docs.first_name+" "+docs.last_name,
+        user_no: docs.mobile_number,
         order_id: req.body.order_id||"ORN/A"+getRandomInt(1000,10000),
         dropbox_address: req.body.dropbox_address||null,
         dropoff_date: req.body.dropoff_date,
@@ -84,6 +86,19 @@ console.log(order)
 // Retrieve and return all orders from the database.
 exports.findAll = (req, res) => {
   Order.find({ user_id: req.params.userId })
+    .then(orders => {
+      res.send(orders);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving the orders."
+      });
+    });
+};
+
+// Retrieve and return all orders from the database.
+exports.findAllOrders = (req, res) => {
+  Order.find()
     .then(orders => {
       res.send(orders);
     })

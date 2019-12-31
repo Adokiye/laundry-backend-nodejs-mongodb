@@ -7,6 +7,8 @@ const OrdersSchema = mongoose.Schema({
     dropbox_address: {type: String,},
     price: {type: Number, },
     user_id: {type: String, required: true},
+    user_name: {type: String},
+    user_no: {type: Number},
     dropoff_date: {type: Date, required: true},
     pickup_date: {type: Date, required: true},
     pickup_time: {type: String, required: true},

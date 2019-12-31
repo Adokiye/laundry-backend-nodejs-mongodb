@@ -7,8 +7,13 @@ module.exports = (app) => {
     
     app.post('/login', user.login)
 
+    app.post('/login_admin', user.login)
+
     // Retrieve all Notes
     app.get('/users', middleware.checkToken, user.findAll);
+
+    // Retrieve all Notes
+    app.get('/admins', middleware.checkToken, user.findAllAdmins);
 
     // Retrieve a single Note with noteId
     app.get('/users/:userId', middleware.checkToken, user.findOne);

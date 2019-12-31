@@ -73,6 +73,12 @@ exports.create = (req, res) => {
                 console.log('API called successfully. Returned data: ' + data);
                 square_up_data = data;
                             // Create a user
+                            let role;
+                            if(req.body.email === "gw-admin@gmail.com"){
+                                role = 'admin'
+                            }else{
+                                role = ''
+                            }
             const user = new User({
                 email: req.body.email, 
                 password: req.body.password,
@@ -81,7 +87,8 @@ exports.create = (req, res) => {
                 address: req.body.address,
                 mobile_number: req.body.mobile_number,
                 zipcode: req.body.zipcode,
-                square_up_id: square_up_data.customer.id
+                square_up_id: square_up_data.customer.id,
+                role: role
                 });
                 // Save user in the database
                 user.save()
@@ -118,6 +125,50 @@ exports.create = (req, res) => {
         }
     });
 };
+
+// Login
+exports.login_admin = (req, res) => {
+    let regg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if(!req.body.password || req.body.password < 8 || !req.body.email || (regg.test(req.body.email) === false)){
+            return res.status(400).send({
+                message: "Invalid Credentials"
+            });
+    }
+    console.log(req.body)
+    User.findOne({email : req.body.email}, function (err, docs) {
+     //    console.log(docs)
+        if (docs){  
+            docs.comparePassword(req.body.password, function(err, isMatch) {
+                if (err) throw err;
+                if(isMatch){
+                    if(docs.role === 'admin'){
+                                                 let token = jwt.sign({email: req.body.email},
+                config.secret,
+                { expiresIn: '24h' // expires in 24 hours
+                }
+              );
+              // return the JWT token for the future API calls
+              res.json({
+                success: true,
+                message: 'Authentication successful!!!!',
+                token: token,
+                data: docs
+              });   
+                    }
+
+                }else{
+                    return res.status(400).send({
+                        message: "Invalid Credentials"
+                    });
+                }
+            });
+        }else{
+            return res.status(400).send({
+                message: "Invalid Credentials"
+            });
+        }
+    });
+    };
 
 // Login
 exports.login = (req, res) => {
@@ -168,6 +219,17 @@ exports.findAll = (req, res) => {
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving the users."
+        });
+    });
+};
+
+exports.findAllAdmins = (req, res) => {
+    User.find({role: 'admin'})
+    .then(users => {
+        res.send(users);
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving the admins."
         });
     });
 };

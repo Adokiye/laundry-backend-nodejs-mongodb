@@ -5,9 +5,10 @@ const UsersSchema = mongoose.Schema({
     first_name: {type: String, required: true},
     last_name: {type: String, required: true}, 
     address: {type: String, required: true},
-    zipcode: {type: Number, required: true},
+    zipcode: {type: String, required: true},
     mobile_number: {type: Number, required: true},
     email: {type: String, required: true, index: { unique: true }, lowercase: true},
+    role: {type: String,},
      password: {type: String, required: true},
      img_url: String,
      square_up_id: {type: String, required: true}

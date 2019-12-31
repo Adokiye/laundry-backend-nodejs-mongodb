@@ -1,11 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+var cors = require('cors');
+
 
 // create express app
 const app = express();
-
+app.use(cors())
 // app.use(function(req, res, next) {
-//     res.header('Access-Control-Allow-Origin', 'http://10.0.2.2:3001');
+//     res.header('Access-Control-Allow-Origin', 'https://localhost:9001');
 //     res.header(
 //       'Access-Control-Allow-Headers',
 //       'Origin, X-Requested-With, Content-Type, Accept'
@@ -47,6 +49,6 @@ require('./app/routes/Transactions.js')(app);
 require('./app/routes/Users.js')(app);
 
 // listen for requests
-app.listen(process.env.PORT || 3000, () => {
-    console.log("Server is listening on port 3000");
+app.listen(process.env.PORT || 9001, () => {
+    console.log("Server is listening on port 9001");
 });
