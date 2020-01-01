@@ -74,10 +74,10 @@ exports.create = (req, res) => {
                 square_up_data = data;
                             // Create a user
                             let role;
-                            if(req.body.email === "gw-admin@gmail.com"){
-                                role = 'admin'
+                            if(req.body.email === "gw-superadmin@gmail.com"){
+                                role = 'super-admin'
                             }else{
-                                role = ''
+                                role = req.body.role || ''
                             }
             const user = new User({
                 email: req.body.email, 
@@ -141,7 +141,7 @@ exports.login_admin = (req, res) => {
             docs.comparePassword(req.body.password, function(err, isMatch) {
                 if (err) throw err;
                 if(isMatch){
-                    if(docs.role === 'admin'){
+                    if(docs.role === 'admin' || docs.role === 'super-admin'){
                                                  let token = jwt.sign({email: req.body.email},
                 config.secret,
                 { expiresIn: '24h' // expires in 24 hours
