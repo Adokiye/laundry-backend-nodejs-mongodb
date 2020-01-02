@@ -1,6 +1,7 @@
 const Order = require("../models/Orders.js");
 const User = require("../models/Users.js");
 const crypto = require("crypto");
+let config = require('../../config/database.js');
 var SquareConnect = require("square-connect");
 var defaultClient = SquareConnect.ApiClient.instance;
 // Configure OAuth2 access token for authorization: oauth2
@@ -36,9 +37,10 @@ exports.adminEditOrder = (req, res) => {
                 amount: req.body.price, // $1.00 charge
                 currency: "USD"
               },
-              idempotency_key: idempotency_key,
+              idempotency_key: idempotency_key.substring(1, 10),
               customer_id: docs.square_up_id && docs.square_up_id
             };
+            console.log(request_body)
             apiInstance.createPayment(request_body).then(
               function(data) {
                 console.log("API called successfully. Returned data: " + data);
