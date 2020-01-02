@@ -26,6 +26,7 @@ exports.create = (req, res) => {
                 card_nonce: req.body.nonce,
             }
             apiInstance.createCustomerCard(docs.square_up_id, body).then(function(data) {
+                let sqid = data.card.id;
                 const card = new Card({
                     no: data.card.last_4, 
                     month: data.card.exp_month,
@@ -50,7 +51,7 @@ exports.create = (req, res) => {
                         price: req.body.price||null,
                         stage: "In Process",
                         preferences: req.body.preferences || null,
-                        square_up_id: data.square_up_id,
+                        square_up_id: sqid,
                         dropoff_date: req.body.dropoff_date,
                         pickup_date: req.body.pickup_date,
                       });

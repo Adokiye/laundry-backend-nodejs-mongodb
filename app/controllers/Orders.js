@@ -1,5 +1,6 @@
 const Order = require("../models/Orders.js");
 const User = require("../models/Users.js");
+const Card = require('../models/Cards.js');
 const crypto = require("crypto");
 let config = require('../../config/database.js');
 var SquareConnect = require("square-connect");
@@ -151,7 +152,10 @@ exports.create = (req, res) => {
         return Math.floor(Math.random() * (max - min + 1)) + min;
       }
       // Create a order
-      const order = new Order({
+      Card.findOne({_id: req.body.card_id }, function(err, docs) {
+        //    console.log(docs)
+        if (docs) {
+               const order = new Order({
         dropbox_id: req.body.dropbox_id || null,
         user_id: req.body.user_id,
         user_name: docs.first_name + " " + docs.last_name,
@@ -163,7 +167,7 @@ exports.create = (req, res) => {
         price: req.body.price || null,
         stage: "In Process",
         preferences: req.body.preference || null,
-        square_up_id: req.body.card_id,
+        square_up_id: docs.square_up_id,
         dropoff_time: req.body.dropoff_time,
         pickup_time: req.body.pickup_time
       });
@@ -182,6 +186,14 @@ exports.create = (req, res) => {
             data: err
           });
         });
+        } else {
+          return res.status(400).send({
+            message: "Unauthorized"
+          });
+        }
+    // Create a card
+    })
+
     } else {
       return res.status(400).send({
         message: "Unauthorized"
