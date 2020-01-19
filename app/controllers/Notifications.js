@@ -1,10 +1,15 @@
 const Notification = require('../models/Notifications.js');
-
+var admin = require("firebase-admin");
+var serviceAccount = require("../../config/key.json");
 // Create and Save a new notification
 exports.create = (req, res) => {
     if(!req.body.description) {
         return res.status(400).send({
             message: "Notification Description can not be empty"
+        });
+    } else if(!req.body.title) {
+        return res.status(400).send({
+            message: "Notification Title can not be empty"
         });
     }else if(!req.body.user_id ){
         return res.status(400).send({
@@ -14,14 +19,40 @@ exports.create = (req, res) => {
     // Create a notification
     const notification = new Notification({
         description: req.body.description, 
+        title: req.body.title,
         user_id: req.body.user_id,
         order_id: req.body.order_id || null,
+        admin: req.body.admin || false
     });
 
     // Save notification in the database
     notification.save()
     .then(data => {
-        res.send(data);
+        admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount),
+            databaseURL: "https://greenworld-laundry.firebaseio.com"
+          });
+          var topic = 'admin';
+
+          var message = {
+                notification: {
+                  title: data.description,
+                  body: data.description
+              },
+            topic: topic
+          };
+          
+          // Send a message to devices subscribed to the provided topic.
+          admin.messaging().send(message)
+            .then((response) => {
+              // Response is a message ID string.
+              console.log('Successfully sent message:', response);
+            })
+            .catch((error) => {
+              console.log('Error sending message:', error);
+            });
+          
+    //    res.send(data);
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while saving the Notification."
@@ -40,6 +71,19 @@ exports.findAll = (req, res) => {
         });
     });
 };
+// Retrieve and return all orders from the database.
+exports.findAllNotifications = (req, res) => {
+    Notification.find()
+      .sort('-updatedAt').then(notifications => {
+        res.send(notifications);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving the notifications."
+        });
+      });
+  };
 
 // Find a single notification with a notificationId
 exports.findOne = (req, res) => {

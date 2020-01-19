@@ -8,10 +8,13 @@ const UsersSchema = mongoose.Schema({
     zipcode: {type: String, required: true},
     mobile_number: {type: Number, required: true},
     email: {type: String, required: true, index: { unique: true }, lowercase: true},
-    role: {type: String,},
+    role: {type: String, enum: ['admin', 'super-admin', 'user'], default: 'user'},
      password: {type: String, required: true},
      img_url: String,
-     square_up_id: {type: String, required: true}
+     square_up_id: {type: String, required: true},
+     device_token: {type: String},
+     device_type: {type: String},
+     device_language: {type: String}
 }, {
     timestamps: true,
     strict: false

@@ -1,30 +1,35 @@
 const Dropbox = require('../models/Dropboxes.js');
 
 // Create and Save a new dropbox
-exports.create = (req, res) => {
-    if(!req.body.dropbox_id) {
-        return res.status(400).send({
-            message: "Dropbox Id can not be empty"
-        });
-    }else if(!req.body.address){
+exports.create = (req, res) => { if(!req.body.address){
+    order_id_generator = () => {
+        const idempotency_key = crypto.randomBytes(23).toString("hex");
+        return "OR/"+idempotency_key.substring(1, 7);
+    };
+    locker_id_generator = () => {
+        const idempotency_key = crypto.randomBytes(23).toString("hex");
+        return "LO/"+idempotency_key.substring(1, 7);
+    };
+    dropbox_id_generator = () => {
+        const idempotency_key = crypto.randomBytes(23).toString("hex");
+        return "DR/"+idempotency_key.substring(1, 7);
+    };
+    locker_code_generator = () => {
+      var code =  getRandomInt(0, 9999);
+      if(code < 1000){
+          return  ('0000'+code).slice(-4);
+      }else{
+          return code.toString();
+      }
+    };
         return res.status(400).send({
             message: "Address field can not be empty"
-        });
-    }else if(!req.body.lat || !Number.isInteger(req.body.lat)){
-        return res.status(400).send({
-            message: "Latitude field can not be empty and must be a number"
-        });
-    }else if(!req.body.long || !Number.isInteger(req.body.long)){
-        return res.status(400).send({
-            message: "Longitude field can not be empty and must be a number"
         });
     }
     // Create a dropbox
     const dropbox = new Dropbox({
-        dropbox_id: req.body.dropbox_id, 
+        dropbox_id: dropbox_id_generator, 
         address: req.body.address,
-        lat: req.body.lat,
-        long: req.body.long,
     });
 
     // Save dropbox in the database

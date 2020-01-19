@@ -5,6 +5,8 @@ const NotificationsSchema = mongoose.Schema({
     order_id: String, 
     user_id: {type: String, required: true},
     status: {type: Boolean, default: false},
+    admin: {type: Boolean, default: false},
+    title: {type: String, required: true}
 }, {
     timestamps: true
 });

@@ -7,6 +7,9 @@ module.exports = (app) => {
     // Retrieve all Notes
     app.get('/notifications/:userId', middleware.checkToken, notification.findAll);
 
+    // Retrieve all Notes
+    app.get('/notifications', middleware.checkToken, notification.findAllNotifications);
+
     // Retrieve a single Note with noteId
     app.get('/notifications/:notificationId', middleware.checkToken, notification.findOne);
 

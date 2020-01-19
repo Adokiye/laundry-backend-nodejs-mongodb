@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "greenworld-laundry",
+  "private_key_id": "51452bb1db5a131019e7a97a8ecf8659c95bd008",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCvoT2C2H8WtcPs\n6PIRwZ96XoFqh/aDTvj/X6X004fXXlOnT5oATd6r0cqhE/Aq+ISvLchBZBN3qdZc\nm7fhrdIFTOVsGcOenu4ocvj6OtxRdFgm1vm964LcuU43ly/9OdYKNXl7bntFn04g\nD5jgHLeF7Tz5H8Bryarbr9/HiItKtP8t3oBVvnelUpBJmIn7JSoLuDoSoYgu2li2\nSyWvOxovGXVZ91kKVe/ltNtM+1jgZgZ8I1Ka2nN3UgexvCGDCHWiRnyg2WR91Cer\nP2C8yCq/P0HBGsPvLtxN5F/puroG3aa7/irromYZ6uCsQFQOzl97JjZgoFzJlEaU\n6dbmlhP3AgMBAAECggEAEHp7b/xqKDJTuLW+iKX3FZ8qW1l4aqeNO0C5LHhwZWen\nR6pzU5X6z3o2ndhmD1IT+O+9u0zteqvHvhaqMRWDABZP7E2aihZ1V/w5mhjNtSLK\nZpKDCiu/sn/8c8DOst6rU3fi9w7NqCGjTeTIvjZTjdBNiT5Oao6YZlZhE7KfBxo+\nMzFhOEeXw//wot4leiGBpzqfnBnM0VUtJz9rVeJGquqHBwIFPziwve94DrITvbPS\nu2w+0UV9398rgdTBBI/BdGV9Hp/Z+IE37NIlqs+ytPjsCQxcNZ2OC+3VAmqEpThS\nSFJsPfbQio+i9wzhyZjKT7qLrSlUOt5+vJXd49x2MQKBgQDyzXvr1kH+vU4Q+nF+\noNxlwoHaIVZpKlZjR0o7KzhH9ppTpX8B+vRSUtggbw7zalj51pfZyl9n93QM5ndi\n8Ve2pTvhezHtTlUZgF9PbZq8tsUhqTjlV3Wd0pO9S/xrsGYt/4Nzy++H+3Bl9vVA\naE9zHImTmg0I2MhixjQTFGxQyQKBgQC5LRHA7zHdTMf6d4udY5Gsu5uXPgwXr0sc\nF8JRVgXhCLGtHGIuSqCbgfNWO8y8u43igQim1rZy5nLNFMf6LJLlCNNrzk9N3vh6\n88rF31Yqr1tRGKgn3g0bSCdBOg1yhw20E+ukP4D4dPvkzTJlMGayZSd23YPS/uE4\n5spPzTxevwKBgAWqJ57787Q2xHB+91Dl/d5d6FundXWkqDlOu3uf6YM8TKNw9AKe\n0T5ucl5nWOjy7Tp++DH7l7g8PLfkVJq5WLuJJVmAX0zTDAc5SH/45ahLd1Put8Ya\nAUN6WzoKYMw+ZFPkZzO3aVI52oh2d4hWJqxf2RHZgT5YmGw9hY+AZXqJAoGBALaA\nErVBiLWATL8vPqw5S4MfyzJ99lEJdE8Vo2+iBl1IwkPIa4MQDcX1hyt/+EIx3p5T\naYF0r5ACSzaPup93era7whLH3CT1EZOr3jax7CxZcvg0AtZ35Bb1P6rrWgF71Seb\nUmwoIiW8td1D1t0fnLdJNmHR42/5v2LjIpUPwuXlAoGBAI+Ixhcc4Pc3Bc/cjppN\napQPS6tb6nh0z+d3j6kjZIkqCoSDXB+7KxX130UHM05AlyGJJltAtEb73OUtF11t\nsf7d7DdQjuQkjUgcVmNanbgvrDcySOZikroLI6Rdnh0b2s6Fy/4UV2gcA8OwrA13\ndvzUgu9X1Ptj2ofxXavQCFJn\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-mrkbk@greenworld-laundry.iam.gserviceaccount.com",
+  "client_id": "107785239343374748366",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-mrkbk%40greenworld-laundry.iam.gserviceaccount.com"
+}
