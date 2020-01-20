@@ -39,7 +39,7 @@ mongoose.connect(dbConfig.url, {
 
 // define a simple route
 app.get('/', (req, res) => {
-    res.json({"message": "Backend Api for Gw cleaners"});
+    res.json({"message": "Backend Api for Gw cleaners..."});
 });
 
 require('./app/routes/Cards.js')(app);
