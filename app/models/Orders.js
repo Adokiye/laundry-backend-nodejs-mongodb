@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const OrdersSchema = mongoose.Schema({
     order_id: {type: String, required: true, index: { unique: true },},
-    dropbox_id: {type: String,}, 
+    dropbox_id: {type: String, required: true}, 
     stage: {type: String, enum: ['pending', 'active', 'completed'], default: 'pending'},
     dropbox_address: {type: String,},
     price: {type: Number, },

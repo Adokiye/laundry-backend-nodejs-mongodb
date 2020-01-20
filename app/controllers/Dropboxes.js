@@ -14,7 +14,7 @@ exports.create = (req, res) => {
     }else{
     // Create a dropbox
     const dropbox = new Dropbox({
-        dropbox_id: dropbox_id_generator, 
+        dropbox_id: this.dropbox_id_generator(), 
         address: req.body.address,
     });
 
