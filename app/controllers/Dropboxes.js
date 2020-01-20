@@ -1,31 +1,17 @@
 const Dropbox = require('../models/Dropboxes.js');
 
 // Create and Save a new dropbox
-exports.create = (req, res) => { if(!req.body.address){
-    order_id_generator = () => {
-        const idempotency_key = crypto.randomBytes(23).toString("hex");
-        return "OR/"+idempotency_key.substring(1, 7);
-    };
-    locker_id_generator = () => {
-        const idempotency_key = crypto.randomBytes(23).toString("hex");
-        return "LO/"+idempotency_key.substring(1, 7);
-    };
-    dropbox_id_generator = () => {
+exports.create = (req, res) => { 
+    function dropbox_id_generator(){
         const idempotency_key = crypto.randomBytes(23).toString("hex");
         return "DR/"+idempotency_key.substring(1, 7);
     };
-    locker_code_generator = () => {
-      var code =  getRandomInt(0, 9999);
-      if(code < 1000){
-          return  ('0000'+code).slice(-4);
-      }else{
-          return code.toString();
-      }
-    };
+    if(!req.body.address) {
         return res.status(400).send({
-            message: "Address field can not be empty"
-        });
-    }
+            message: "Address field cannot be empty"
+        });            
+    
+    }else{
     // Create a dropbox
     const dropbox = new Dropbox({
         dropbox_id: dropbox_id_generator, 
@@ -40,12 +26,14 @@ exports.create = (req, res) => { if(!req.body.address){
         res.status(500).send({
             message: err.message || "Some error occurred while saving the Dropbox."
         });
-    });
+    });        
+    }
+
 };
 
 // Retrieve and return all cards from the database.
 exports.findAll = (req, res) => {
-    Dropbox.find()
+    Dropbox.find().sort('-updatedAt')
     .then(dropboxes => {
         res.send(dropboxes);
     }).catch(err => {

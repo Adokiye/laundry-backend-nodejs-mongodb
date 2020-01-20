@@ -316,7 +316,7 @@ exports.login = (req, res) => {
 
 // Retrieve and return all users from the database.
 exports.findAll = (req, res) => {
-  User.find()
+  User.find().sort('-updatedAt')
     .then(users => {
       res.send(users);
     })
@@ -329,7 +329,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.findAllAdmins = (req, res) => {
-  User.find({ role: "admin" })
+  User.find({ role: "admin" }).sort('-updatedAt')
     .then(users => {
       res.send(users);
     })

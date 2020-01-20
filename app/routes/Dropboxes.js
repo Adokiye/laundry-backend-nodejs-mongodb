@@ -2,14 +2,14 @@ module.exports = (app) => {
     const dropbox = require('../controllers/Dropboxes.js');
     let middleware = require('../middleware.js')
     // Create a new Dropbox
-    app.post('/dropboxes', middleware.checkToken, dropbox.create);
+    app.post('/dropbox', middleware.checkToken, dropbox.create);
 
     // Retrieve all Dropboxes
-    app.get('/dropboxes', middleware.checkToken, dropbox.findAll);
+    app.get('/dropbox', middleware.checkToken, dropbox.findAll);
 
     // Retrieve a single Dropbox with dropboxId
-    app.get('/dropboxes/:dropboxId', middleware.checkToken, dropbox.findOne);
+    app.get('/dropbox/:dropboxId', middleware.checkToken, dropbox.findOne);
 
     // Delete a Dropbox with dropboxId
-    app.delete('/dropboxes/:dropboxId', middleware.checkToken, dropbox.delete);
+    app.delete('/dropbox/:dropboxId', middleware.checkToken, dropbox.delete);
 }
