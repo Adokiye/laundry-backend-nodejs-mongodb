@@ -9,6 +9,7 @@ var defaultClient = SquareConnect.ApiClient.instance;
 var oauth2 = defaultClient.authentications["oauth2"];
 var nodemailer = require("nodemailer");
 oauth2.accessToken = config.square_up_access_token;
+var stripe = require('stripe')(config.stripe_key);
 
 exports.updateDeviceToken = (req, res) => {
   console.log(req.body);
@@ -122,29 +123,28 @@ exports.create = (req, res) => {
       return res.status(409).send({
         message: "Email exists already"
       });
-    } else {
-      let square_up_data = "";
-      var apiInstance = new SquareConnect.CustomersApi();
-      //    var body = new SquareConnect.CreateCustomerRequest({
-      //         given_name: req.body.first_name,
-      //         family_name: req.body.last_name,
-      //         email_address: req.body.email,
-      //         phone_number: req.body.mobile_number,
-      //     }); // CreateCustomerRequest | An object containing the fields to POST for the request.  See the corresponding object definition for field details.
-
-      const body = {
-        given_name: req.body.first_name,
-        family_name: req.body.last_name,
-        email_address: req.body.email
-        //      phone_number: req.body.mobile_number,
+    } else {   
+         const body = {
+          email: req.body.email,
+          name: req.body.first_name+" "+req.body.last_name,
+          address: {
+            line1: req.body.address
+          },
+          phone: req.body.mobile_number,
       };
-      console.log(body);
-      apiInstance.createCustomer(body).then(
-        function(data) {
-          console.log("API called successfully. Returned data: " + data);
-          square_up_data = data;
-          // Create a user
-          let role;
+      console.log(JSON.stringify(body))
+      stripe.customers.create(
+        body,
+        function(err, customer) { 
+           if(err){
+             console.log(err)
+            res.status(err.statusCode).send({
+              message:
+                err.message || "Some error occurred while saving the User."
+            });
+            }
+           var stripe_id = customer.id;
+                     let role;
           if (req.body.email === "gw-superadmin@gmail.com") {
             role = "super-admin";
           } else {
@@ -158,8 +158,9 @@ exports.create = (req, res) => {
             address: req.body.address,
             mobile_number: req.body.mobile_number,
             zipcode: req.body.zipcode,
-            square_up_id: square_up_data.customer.id,
-            role: role
+            stripe_id: stripe_id,
+            role: role,
+            device_token: req.body.device_token
           });
           // Save user in the database
           user
@@ -170,7 +171,7 @@ exports.create = (req, res) => {
                 service: "gmail",
                 auth: {
                   user: "washnbox@gmail.com",
-                  pass: "funmi123"
+                  pass: "femi123$"
                 }
               });
               const mailOptions = {
@@ -194,29 +195,16 @@ exports.create = (req, res) => {
                   err.message || "Some error occurred while saving the User."
               });
             });
-        },
-        function(error) {
-          console.error(error);
+
         }
       );
-      //                 try {
-      //     const respone = await payments_api.createPayment(request_body);
-      //     const json = JSON.stringify(respone);
-      //     res.render('process-payment', {
-      //       'title': 'Payment Successful',
-      //       'result': json
-      //     });
-      //   } catch (error) {
-      //     res.render('process-payment', {
-      //       'title': 'Payment Failure',
-      //       'result': error.response.text
-      //     });
-      //   }
-    }
-  });
+
+        }
+    })
+  
 };
 
-// Login
+// Login Admin
 exports.login_admin = (req, res) => {
   let regg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   if (
@@ -245,6 +233,11 @@ exports.login_admin = (req, res) => {
               expiresIn: "24h" // expires in 24 hours
             });
             // return the JWT token for the future API calls
+            if(req.body.device_token){
+              User.findOneAndUpdate({email: req.body.email}, {device_token: req.body.device_token}, function(err, docs){
+                console.log(err)
+              });
+            }
             res.json({
               success: true,
               message: "Authentication successful!!!!",
@@ -293,6 +286,11 @@ exports.login = (req, res) => {
           let token = jwt.sign({ email: req.body.email }, config.secret, {
             expiresIn: "24h" // expires in 24 hours
           });
+          if(req.body.device_token){
+            User.findOneAndUpdate({email: req.body.email}, {device_token: req.body.device_token}, function(err, docs){
+              console.log(err)
+            });
+           }
           // return the JWT token for the future API calls
           res.json({
             success: true,

@@ -20,7 +20,10 @@ let checkToken = (req, res, next) => {
   if (token) {
     jwt.verify(token, config.secret, (err, decoded) => {
       if (err) {
-
+        return  res.status(404).send({
+          message:
+            'Token is not valid'
+        });
       } else {
         req.decoded = decoded;
         next();

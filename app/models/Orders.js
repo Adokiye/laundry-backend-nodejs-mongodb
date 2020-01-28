@@ -15,7 +15,7 @@ const OrdersSchema = mongoose.Schema({
     pickup_time: {type: String, required: true},
     dropoff_time: {type: String, required: true},
     preferences: String,
-    square_up_id: {type: String, required: true},
+    stripe_id: {type: String, required: true},
     description: {type: String},
     sub_stage: {type:  String, },
     locker_id: {type: String, },

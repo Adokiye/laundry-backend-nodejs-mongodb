@@ -1,4 +1,5 @@
 const Notification = require('../models/Notifications.js');
+const User = require("../models/Users.js");
 var admin = require("firebase-admin");
 var serviceAccount = require("../../config/key.json");
 // Create and Save a new notification
@@ -28,29 +29,72 @@ exports.create = (req, res) => {
     // Save notification in the database
     notification.save()
     .then(data => {
-        admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount),
-            databaseURL: "https://greenworld-laundry.firebaseio.com"
-          });
-          var topic = 'admin';
+        if (!admin.apps.length) {
+            admin.initializeApp(
+                {
+                credential: admin.credential.cert(serviceAccount),
+                databaseURL: "https://greenworld-laundry.firebaseio.com"
+              }
+              );
+        }
 
-          var message = {
-                notification: {
-                  title: data.description,
-                  body: data.description
-              },
-            topic: topic
-          };
+          var topic = 'admin';
+        //   if(req.body.admin){
+            var message = {};
+            if(req.body.admin){
+                message = {
+                    notification: {
+                      title: data.title,
+                      body: data.description
+                  },
+                topic: 'admin'
+              };
+              console.log(JSON.stringify(message))
+          
+              // Send a message to devices subscribed to the provided topic.
+              admin.messaging().send(message)
+                .then((response) => {
+                  // Response is a message ID string.
+                  res.send(notification);
+                  console.log('Successfully sent message:', response);
+                })
+                .catch((error) => {
+                    res.send(notification);
+                  console.log('Error sending message:', error);
+                });
+            }else{
+                User.findOne({ _id: notification.user_id }, function(err, docs) {
+                       console.log(docs)
+                    if (docs && docs.device_token) {
+                       message = {
+                    token: docs.device_token,
+                    notification: {
+                      title: data.title,
+                      body: data.description
+                  },
+              };   
+                  console.log(JSON.stringify(message))
           
           // Send a message to devices subscribed to the provided topic.
           admin.messaging().send(message)
             .then((response) => {
               // Response is a message ID string.
+              res.send(notification);
               console.log('Successfully sent message:', response);
             })
             .catch((error) => {
+                res.send(notification);
               console.log('Error sending message:', error);
             });
+                    } else {
+                    //   return res.status(400).send({
+                    //     message: "Unauthorized"
+                    //   });
+                    res.send(notification);
+                    }
+            });    
+        }
+
           
     //    res.send(data);
     }).catch(err => {
@@ -63,6 +107,7 @@ exports.create = (req, res) => {
 // Retrieve and return all notifications from the database.
 exports.findAll = (req, res) => {
     Notification.find({user_id: req.params.userId})
+    .sort('-updatedAt')
     .then(notifications => {
         res.send(notifications);
     }).catch(err => {

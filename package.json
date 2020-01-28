@@ -24,6 +24,7 @@
     "mongoose": "^5.7.13",
     "nodemailer": "^6.4.2",
     "nodemon": "^2.0.1",
-    "square-connect": "^2.20191120.0"
+    "square-connect": "^2.20191120.0",
+    "stripe": "^8.4.1"
   }
 }

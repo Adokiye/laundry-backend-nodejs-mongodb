@@ -1,5 +1,5 @@
 const Dropbox = require('../models/Dropboxes.js');
-
+const crypto = require("crypto");
 // Create and Save a new dropbox
 exports.create = (req, res) => { 
     function dropbox_id_generator(){
@@ -14,10 +14,10 @@ exports.create = (req, res) => {
     }else{
     // Create a dropbox
     const dropbox = new Dropbox({
-        dropbox_id: this.dropbox_id_generator(), 
+        dropbox_id: dropbox_id_generator(), 
         address: req.body.address,
     });
-
+console.log(req)
     // Save dropbox in the database
     dropbox.save()
     .then(data => {

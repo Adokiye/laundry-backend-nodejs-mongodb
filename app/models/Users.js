@@ -11,7 +11,7 @@ const UsersSchema = mongoose.Schema({
     role: {type: String, enum: ['admin', 'super-admin', 'user'], default: 'user'},
      password: {type: String, required: true},
      img_url: String,
-     square_up_id: {type: String, required: true},
+     stripe_id: {type: String, required: true},
      device_token: {type: String},
      device_type: {type: String},
      device_language: {type: String}

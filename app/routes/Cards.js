@@ -4,6 +4,9 @@ module.exports = (app) => {
     // Create a new card
     app.post('/cards', middleware.checkToken, cards.create);
 
+    // Set default card
+    app.post('/cards/setDefault', middleware.checkToken, cards.setDefault);
+
     // Retrieve all cards
     app.get('/cards/:userId', middleware.checkToken, cards.findAll);
 
