@@ -11,6 +11,8 @@ var oauth2 = defaultClient.authentications["oauth2"];
 var nodemailer = require("nodemailer");
 oauth2.accessToken = config.square_up_access_token;
 var stripe = require("stripe")(config.stripe_key);
+var pass = config.email_pass;
+var email = config.email;
 // const stripe = Stripe('sk_test_...', {
 //   apiVersion: '2019-08-08',
 //   maxNetworkRetries: 1,
@@ -91,12 +93,12 @@ exports.adminEditOrder = (req, res) => {
                           var transporter = nodemailer.createTransport({
                             service: "gmail",
                             auth: {
-                              user: "washnbox@gmail.com",
-                              pass: "femi123$"
+                              user: email,
+                              pass: pass
                             }
                           });
                           const mailOptions = {
-                            from: "washnbox@gmail.com", // sender address
+                            from: email, // sender address
                             to: docs.email, // list of receivers
                             subject: "Greenworld Laundry App Charge", // Subject line
                             html: `<b>Your card has been charged, the price of your laundry is ${req.body.price} </b>` // plain text body
@@ -146,8 +148,8 @@ exports.adminEditOrder = (req, res) => {
                           var transporter = nodemailer.createTransport({
                             service: "gmail",
                             auth: {
-                              user: "washnbox@gmail.com",
-                              pass: "femi123$"
+                              user: email,
+                              pass: pass
                             }
                           });
                           notificationData.body.title = "Locker ID generated";
@@ -156,7 +158,7 @@ exports.adminEditOrder = (req, res) => {
                           notificationData.body.user_id = docs._id;
                           notificationsController.create(notificationData, res);
                           const mailOptions = {
-                            from: "washnbox@gmail.com", // sender address
+                            from: email, // sender address
                             to: docs.email, // list of receivers
                             subject:
                               "Greenworld Laundry App Locker ID generated", // Subject line
@@ -721,12 +723,12 @@ exports.create = (req, res) => {
               var transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
-                  user: "washnbox@gmail.com",
-                  pass: "femi123$"
+                  user: email,
+                  pass: pass
                 }
               });
               const mailOptions = {
-                from: "washnbox@gmail.com", // sender address
+                from: email, // sender address
                 to: docs_user.email, // list of receivers
                 subject: "Greenworld Laundry App Order Created", // Subject line
                 html: `<b>Your Order has been created, the id is ${data.order_id} </b>` // plain text body
@@ -840,8 +842,8 @@ exports.delete = (req, res) => {
             }
             var transporter = nodemailer.createTransport({
               service: "gmail",
-              user: "washnbox@gmail.com",
-              pass: "femi123$"
+              user: email,
+              pass: pass
             });
             let notificationData = {
               body: {
@@ -856,7 +858,7 @@ exports.delete = (req, res) => {
             notificationData.body.user_id = order.user_id;
             notificationsController.create(notificationData, res);
             const mailOptions = {
-              from: "washnbox@gmail.com", // sender address
+              from: email, // sender address
               to: email, // list of receivers
               subject: "Greenworld Laundry App Order Cancelled", // Subject line
               html: `<b>Your Order was cancelled, you'll be contacted as soon as possible</b>` // plain text body

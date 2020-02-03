@@ -10,7 +10,8 @@ var oauth2 = defaultClient.authentications["oauth2"];
 var nodemailer = require("nodemailer");
 oauth2.accessToken = config.square_up_access_token;
 var stripe = require('stripe')(config.stripe_key);
-
+var pass = config.email_pass;
+var email = config.email;
 exports.updateDeviceToken = (req, res) => {
   console.log(req.body);
   if (!req.body.device_token) {
@@ -170,12 +171,12 @@ exports.create = (req, res) => {
               var transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
-                  user: "washnbox@gmail.com",
-                  pass: "femi123$"
+                  user: email,
+                  pass: pass
                 }
               });
               const mailOptions = {
-                from: "washnbox@gmail.com", // sender address
+                from: email, // sender address
                 to: user.email, // list of receivers
                 subject: "Greenworld Laundry App Account Created", // Subject line
                 html: `<b>${user.first_name}, Your Account has been created successfully </b>` // plain text body
@@ -230,7 +231,7 @@ exports.login_admin = (req, res) => {
         if (isMatch) {
           if (docs.role === "admin" || docs.role === "super-admin") {
             let token = jwt.sign({ email: req.body.email }, config.secret, {
-              expiresIn: "24h" // expires in 24 hours
+              expiresIn: "480h" // expires in 24 hours
             });
             // return the JWT token for the future API calls
             if(req.body.device_token){
@@ -284,7 +285,7 @@ exports.login = (req, res) => {
         };
         if (isMatch) {
           let token = jwt.sign({ email: req.body.email }, config.secret, {
-            expiresIn: "24h" // expires in 24 hours
+            expiresIn: "480h" // expires in 24 hours
           });
           if(req.body.device_token){
             User.findOneAndUpdate({email: req.body.email}, {device_token: req.body.device_token}, function(err, docs){
