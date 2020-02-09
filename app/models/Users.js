@@ -17,7 +17,6 @@ const UsersSchema = mongoose.Schema({
      device_language: {type: String}
 }, {
     timestamps: true,
-    strict: false
 });
 UsersSchema.pre('save', function(next) {
     var user = this;
