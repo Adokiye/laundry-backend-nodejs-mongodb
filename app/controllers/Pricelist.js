@@ -1,30 +1,31 @@
-const Dropbox = require('../models/Dropboxes.js');
+const Pricelist = require('../models/Pricelist.js');
 const crypto = require("crypto");
-// Create and Save a new dropbox
-exports.create = (req, res) => { 
-    function dropbox_id_generator(){
-        const idempotency_key = crypto.randomBytes(23).toString("hex");
-        return "DR/"+idempotency_key.substring(1, 7);
-    };
-    if(!req.body.address) {
+// Create and Save a new Pricelist
+exports.create = (req, res) => {
+    if(!req.body.name) {
         return res.status(400).send({
-            message: "Address field cannot be empty"
+            message: "Name field cannot be empty"
+        });            
+    
+    } else if(!req.body.price) {
+        return res.status(400).send({
+            message: "Price field cannot be empty"
         });            
     
     }else{
-    // Create a dropbox
-    const dropbox = new Dropbox({
-        dropbox_id: dropbox_id_generator(), 
-        address: req.body.address,
+    // Create a Pricelist
+    const Pricelist = new Pricelist({
+        name: req.body.name, 
+        price: req.body.price,
     });
 console.log(req)
-    // Save dropbox in the database
-    dropbox.save()
+    // Save Pricelist in the database
+    Pricelist.save()
     .then(data => {
         res.send(data);
     }).catch(err => {
         res.status(500).send({
-            message: err.message || "Some error occurred while saving the Dropbox."
+            message: err.message || "Some error occurred while saving the Pricelist."
         });
     });        
     }
@@ -33,56 +34,56 @@ console.log(req)
 
 // Retrieve and return all cards from the database.
 exports.findAll = (req, res) => {
-    Dropbox.find().sort('-updatedAt')
-    .then(dropboxes => {
-        res.send(dropboxes);
+    Pricelist.find().sort('-updatedAt')
+    .then(pricelist => {
+        res.send(pricelist);
     }).catch(err => {
         res.status(500).send({
-            message: err.message || "Some error occurred while retrieving the Dropboxes."
+            message: err.message || "Some error occurred while retrieving the Pricelist."
         });
     });
 };
 
-// Find a single dropbox with a cardId
+// Find a single Pricelist with a cardId
 exports.findOne = (req, res) => {
-    Dropbox.findById(req.params.dropboxId)
-    .then(dropbox => {
-        if(!dropbox) {
+    Pricelist.findById(req.params.pricelistId)
+    .then(pricelist => {
+        if(!pricelist) {
             return res.status(404).send({
-                message: "Dropbox not found with id " + req.params.dropboxId
+                message: "Pricelist not found with id " + req.params.pricelistId
             });            
         }
-        res.send(dropbox);
+        res.send(pricelist);
     }).catch(err => {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
-                message: "Dropbox not found with id " + req.params.dropboxId
+                message: "Pricelist not found with id " + req.params.pricelistId
             });                
         }
         return res.status(500).send({
-            message: "Error retrieving dropbox with id " + req.params.dropboxId
+            message: "Error retrieving Pricelist with id " + req.params.pricelistId
         });
     });
 };
 
-// Delete a dropbox with the specified cardId in the request
+// Delete a Pricelist with the specified cardId in the request
 exports.delete = (req, res) => {
-    Dropbox.findByIdAndRemove(req.params.dropboxId)
-    .then(dropbox => {
-        if(!dropbox) {
+    Pricelist.findByIdAndRemove(req.params.pricelistId)
+    .then(pricelist => {
+        if(!pricelist) {
             return res.status(404).send({
-                message: "Dropbox not found with id " + req.params.dropboxId
+                message: "Pricelist not found with id " + req.params.pricelistId
             });
         }
-        res.send({message: "Dropbox deleted successfully!"});
+        res.send({message: "Pricelist deleted successfully!"});
     }).catch(err => {
         if(err.kind === 'ObjectId' || err.name === 'NotFound') {
             return res.status(404).send({
-                message: "Dropbox not found with id " + req.params.dropboxId
+                message: "Pricelist not found with id " + req.params.pricelistId
             });                
         }
         return res.status(500).send({
-            message: "Could not delete Dropbox with id " + req.params.dropboxId
+            message: "Could not delete Pricelist with id " + req.params.pricelistId
         });
     });
 };
