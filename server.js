@@ -44,6 +44,7 @@ app.get('/', (req, res) => {
 
 require('./app/routes/Cards.js')(app);
 require('./app/routes/Dropboxes.js')(app);
+require('./app/routes/Pricelist.js')(app);
 require('./app/routes/Notifications.js')(app);
 require('./app/routes/Orders.js')(app);
 require('./app/routes/Transactions.js')(app);
