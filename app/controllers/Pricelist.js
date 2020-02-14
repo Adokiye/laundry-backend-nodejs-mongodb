@@ -14,13 +14,13 @@ exports.create = (req, res) => {
     
     }else{
     // Create a Pricelist
-    const Pricelist = new Pricelist({
+    const pricelist = new Pricelist({
         name: req.body.name, 
         price: req.body.price,
     });
 console.log(req)
     // Save Pricelist in the database
-    Pricelist.save()
+    pricelist.save()
     .then(data => {
         res.send(data);
     }).catch(err => {
