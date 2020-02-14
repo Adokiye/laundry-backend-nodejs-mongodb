@@ -1,5 +1,5 @@
 module.exports = (app) => {
-    const pricelist = require('../controllers/Ppricelist.js');
+    const pricelist = require('../controllers/Pricelist.js');
     let middleware = require('../middleware.js')
     // Create a new pricelist
     app.post('/pricelist', middleware.checkToken, pricelist.create);
