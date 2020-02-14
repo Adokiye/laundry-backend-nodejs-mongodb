@@ -5,7 +5,17 @@ var cors = require('cors');
 
 // create express app
 const app = express();
-app.use(cors())
+app.use(cors());
+app.use(function(req, res, next) {
+   res.header("Access-Control-Allow-Origin", "*");
+   res.header('Access-Control-Allow-Methods', 'DELETE, PUT');
+   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+   if ('OPTIONS' == req.method) {
+      res.sendStatus(200);
+    }
+    else {
+      next();
+    }});
 // app.use(function(req, res, next) {
 //     res.header('Access-Control-Allow-Origin', 'https://localhost:9001');
 //     res.header(
