@@ -51,5 +51,5 @@ require('./app/routes/Users.js')(app);
 
 // listen for requests
 app.listen(process.env.PORT || 3001, () => {
-    console.log("Server is listening on port 9001");
+    console.log("Server is listening on port 3001");
 });
