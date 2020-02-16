@@ -6,7 +6,7 @@ var cors = require('cors');
 // create express app
 const app = express();
 app.use(cors());
-app.options('*', cors())
+//app.options('*', cors())
 // app.use(function(req, res, next) {
 //     res.header('Access-Control-Allow-Origin', 'https://localhost:9001');
 //     res.header(
