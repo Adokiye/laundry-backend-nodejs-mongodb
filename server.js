@@ -6,16 +6,7 @@ var cors = require('cors');
 // create express app
 const app = express();
 app.use(cors());
-app.use(function(req, res, next) {
-   res.header("Access-Control-Allow-Origin", "*");
-   res.header('Access-Control-Allow-Methods', 'DELETE, PUT');
-   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-   if ('OPTIONS' == req.method) {
-      res.sendStatus(200);
-    }
-    else {
-      next();
-    }});
+app.options('*', cors())
 // app.use(function(req, res, next) {
 //     res.header('Access-Control-Allow-Origin', 'https://localhost:9001');
 //     res.header(
@@ -61,6 +52,6 @@ require('./app/routes/Transactions.js')(app);
 require('./app/routes/Users.js')(app);
 
 // listen for requests
-app.listen(process.env.PORT || 3001, () => {
-    console.log("Server is listening on port 3001");
+app.listen(process.env.PORT || 9001, () => {
+    console.log("Server is listening on port 9001");
 });
